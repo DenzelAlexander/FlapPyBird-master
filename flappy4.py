@@ -84,16 +84,16 @@ def main():
     IMAGES['base'] = pygame.image.load('assets/sprites/base.png').convert_alpha()
 
     # sounds
-    if 'win' in sys.platform:
-        soundExt = '.wav'
-    else:
-        soundExt = '.ogg'
+#    if 'win' in sys.platform:
+ #       soundExt = '.wav'
+  #  else:
+   #     soundExt = '.ogg'
 
-    SOUNDS['die']    = pygame.mixer.Sound('assets/audio/die' + soundExt)
-    SOUNDS['hit']    = pygame.mixer.Sound('assets/audio/hit' + soundExt)
-    SOUNDS['point']  = pygame.mixer.Sound('assets/audio/point' + soundExt)
-    SOUNDS['swoosh'] = pygame.mixer.Sound('assets/audio/swoosh' + soundExt)
-    SOUNDS['wing']   = pygame.mixer.Sound('assets/audio/wing' + soundExt)
+#    SOUNDS['die']    = pygame.mixer.Sound('assets/audio/die' + soundExt)
+ #   SOUNDS['hit']    = pygame.mixer.Sound('assets/audio/hit' + soundExt)
+  #  SOUNDS['point']  = pygame.mixer.Sound('assets/audio/point' + soundExt)
+   # SOUNDS['swoosh'] = pygame.mixer.Sound('assets/audio/swoosh' + soundExt)
+   # SOUNDS['wing']   = pygame.mixer.Sound('assets/audio/wing' + soundExt)
 
     while True:
         # select random background sprites
@@ -154,20 +154,22 @@ def showWelcomeAnimation():
 
     # player shm for up-down motion on welcome screen
     playerShmVals = {'val': 0, 'dir': 1}
-
+    pygame.mouse.set_visible(False)
     while True:
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
-                # make first flap sound and return values for mainGame
-                SOUNDS['wing'].play()
+
+            if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP) or event.type == MOUSEBUTTONDOWN: 
+                # make first flap sound and return values for mainGame 
+              #  SOUNDS['wing'].play()
                 return {
                     'playery': playery + playerShmVals['val'],
                     'basex': basex,
                     'playerIndexGen': playerIndexGen,
-                }
+              }
+
 
         # adjust playery, playerIndex, basex
         if (loopIter + 1) % 5 == 0:
@@ -230,11 +232,11 @@ def mainGame(movementInfo):
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
+            if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP ) or event.type == pygame.MOUSEBUTTONDOWN:
                 if playery > -2 * IMAGES['player'][0].get_height():
                     playerVelY = playerFlapAcc
                     playerFlapped = True
-                    SOUNDS['wing'].play()
+           #        SOUNDS['wing'].play()
 
         # check for crash here
         crashTest = checkCrash({'x': playerx, 'y': playery, 'index': playerIndex},
@@ -257,7 +259,7 @@ def mainGame(movementInfo):
             pipeMidPos = pipe['x'] + IMAGES['pipe'][0].get_width() / 2
             if pipeMidPos <= playerMidPos < pipeMidPos + 4:
                 score += 1
-                SOUNDS['point'].play()
+              #  SOUNDS['point'].play()
 
         # playerIndex basex change
         if (loopIter + 1) % 3 == 0:
@@ -336,16 +338,16 @@ def showGameOverScreen(crashInfo):
     upperPipes, lowerPipes = crashInfo['upperPipes'], crashInfo['lowerPipes']
 
     # play hit and die sounds
-    SOUNDS['hit'].play()
-    if not crashInfo['groundCrash']:
-        SOUNDS['die'].play()
+ #   SOUNDS['hit'].play()
+  #  if not crashInfo['groundCrash']:
+   #     SOUNDS['die'].play()
 
     while True:
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
-            if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
+            if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP) or event.type == pygame.MOUSEBUTTONDOWN:
                 if playery + playerHeight >= BASEY - 1:
                     return
 
